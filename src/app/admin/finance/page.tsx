@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { opsClient } from '@/lib/ops';
 
 export default function FinancePage() {
@@ -32,6 +33,18 @@ export default function FinancePage() {
             <div className="text-sm text-muted-foreground">{label}</div>
             <div className="text-3xl font-semibold">{value}</div>
           </div>
+        ))}
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ['תזרים צפוי', '/admin/cashflow'],
+          ['רווח יעד', '/admin/target-profits'],
+          ['רווחיות לפי דגם', '/admin/profitability'],
+          ['תמחור וסימולציה', '/admin/pricing'],
+        ].map(([label, href]) => (
+          <Link key={href} href={href} className="rounded-lg border bg-card p-4 hover:bg-accent">
+            {label}
+          </Link>
         ))}
       </div>
     </div>

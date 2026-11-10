@@ -20,6 +20,21 @@ import {
   X,
   Store,
   Smartphone,
+  Hourglass,
+  Search,
+  RotateCcw,
+  PackageMinus,
+  MapPin,
+  Truck,
+  ClipboardList,
+  ArrowLeftRight,
+  Scale,
+  TrendingUp,
+  Target,
+  PieChart,
+  Calculator,
+  History,
+  ShieldCheck,
 } from 'lucide-react';
 import ShekelIcon from '@/components/ui/shekel-icon';
 import { useState } from 'react';
@@ -29,18 +44,57 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 const navigationSections = [
   {
+    title: 'תפעול',
     items: [
       { name: 'לוח בקרה', href: '/admin/dashboard', icon: LayoutDashboard },
       { name: 'מלאי', href: '/admin/inventory', icon: Package },
-      { name: 'דגמים', href: '/admin/inventory/models', icon: Smartphone },
+      { name: 'דגמים ומשלוחים', href: '/admin/inventory/models', icon: Smartphone },
       { name: 'קרטונים', href: '/admin/inventory/cartons', icon: Package },
       { name: 'מכשירים במלאי', href: '/admin/inventory/devices', icon: Smartphone },
-      { name: 'מפיצים', href: '/admin/inventory/distributors', icon: Store },
+      { name: 'גיול מלאי', href: '/admin/inventory/stock-ageing', icon: Hourglass },
+      { name: 'איתור אצווה', href: '/admin/inventory/batch-trace', icon: Search },
+    ],
+  },
+  {
+    title: 'מסחר',
+    items: [
       { name: 'מכירות', href: '/admin/sales', icon: FileText },
+      { name: 'מפיצים', href: '/admin/inventory/distributors', icon: Store },
       { name: 'גבייה', href: '/admin/collections', icon: ShekelIcon },
-      { name: 'העברה לשיווק', href: '/admin/consignment', icon: RefreshCw },
+      { name: 'החזרות', href: '/admin/returns', icon: RotateCcw },
+      { name: 'הוצאה מהמלאי', href: '/admin/write-offs', icon: PackageMinus },
+    ],
+  },
+  {
+    title: 'שטח',
+    items: [
+      { name: 'אנשי מכירות', href: '/admin/field-sales', icon: MapPin },
       { name: 'ביקורי שטח', href: '/admin/field', icon: Building2 },
+      { name: 'מלאי רכב', href: '/admin/van-stock', icon: Truck },
+      { name: 'דוח סוכן — רכב', href: '/admin/van-report', icon: ClipboardList },
+    ],
+  },
+  {
+    title: 'חברת השיווק',
+    items: [
+      { name: 'העברה לשיווק', href: '/admin/consignment', icon: ArrowLeftRight },
+      { name: 'התחשבנות שיווק', href: '/admin/settlements', icon: Scale },
+      { name: 'חוב לפלא', href: '/admin/debt', icon: Scale },
+    ],
+  },
+  {
+    title: 'כספים',
+    items: [
       { name: 'כספים', href: '/admin/finance', icon: ShekelIcon },
+      { name: 'תזרים צפוי', href: '/admin/cashflow', icon: TrendingUp },
+      { name: 'רווח יעד', href: '/admin/target-profits', icon: Target },
+      { name: 'רווחיות לפי דגם', href: '/admin/profitability', icon: PieChart },
+      { name: 'תמחור וסימולציה', href: '/admin/pricing', icon: Calculator },
+    ],
+  },
+  {
+    title: 'אחריות',
+    items: [
       { name: 'מכשירים', href: '/admin/devices', icon: Package },
       { name: 'אחריות', href: '/admin/warranties', icon: Shield },
       { name: 'תיקונים', href: '/admin/repairs', icon: Wrench },
@@ -50,6 +104,14 @@ const navigationSections = [
       { name: 'משתמשים', href: '/admin/users', icon: Users },
       { name: 'תשלומים', href: '/admin/payments', icon: ShekelIcon },
       { name: 'דוחות', href: '/admin/reports', icon: FileText },
+    ],
+  },
+  {
+    title: 'ניהול',
+    items: [
+      { name: 'דוח נוכחות', href: '/admin/attendance', icon: Hourglass },
+      { name: 'עובדים והרשאות', href: '/admin/employees', icon: ShieldCheck },
+      { name: 'יומן פעולות', href: '/admin/activity', icon: History },
     ],
   },
   {
@@ -75,9 +137,8 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
   const supabase = createClient();
   const { user } = useCurrentUser();
   const isAdmin = !user || user.role === 'admin';
-  const adminOnly = ['/admin/users', '/admin/payments', '/admin/settings', '/admin/stores', '/admin/labs'];
+  const adminOnly = ['/admin/users', '/admin/payments', '/admin/settings', '/admin/stores', '/admin/labs', '/admin/employees'];
 
-  // התנתקות מהמערכת
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push('/login');
@@ -85,7 +146,6 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
 
   return (
     <>
-      {/* כפתור תפריט במובייל */}
       <button
         className="lg:hidden fixed top-4 right-4 z-50 p-2 rounded-md bg-white dark:bg-gray-800 shadow-md border border-border"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -93,17 +153,15 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
         {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
-      {/* Sidebar */}
       <div
         className={cn(
           'fixed lg:static inset-y-0 right-0 z-40 bg-card border-l border-border shadow-sm transition-all duration-300 ease-in-out',
-          isMobileMenuOpen ? 'translate-x-0 w-[17.5rem]' : 'translate-x-full', // מובייל: פתוח/סגור
-          'lg:translate-x-0', // דסקטופ: תמיד מוצג
-          'lg:w-[17.5rem]' // רוחב קבוע בדסקטופ
+          isMobileMenuOpen ? 'translate-x-0 w-[17.5rem]' : 'translate-x-full',
+          'lg:translate-x-0',
+          'lg:w-[17.5rem]'
         )}
       >
         <div className="flex flex-col h-full">
-          {/* Logo – אזור קומפקטי יותר עם לוגו גדול וטקסט מתחת */}
           <div className="flex items-center justify-center h-16 px-3 border-b border-border bg-gradient-to-l from-primary/10 to-transparent">
             <div className="flex flex-col items-center gap-0.5">
               <div className="w-full h-11 overflow-hidden flex items-center justify-center">
@@ -122,8 +180,6 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
             </div>
           </div>
 
-
-          {/* Navigation */}
           <nav className="flex-1 px-3 py-4 space-y-2 overflow-y-auto">
             {navigationSections.map((section, sectionIndex) => (
               <div key={sectionIndex}>
@@ -138,7 +194,7 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
                     .filter((item) => isAdmin || !adminOnly.some((href) => item.href.startsWith(href)))
                     .filter((item) => isAdmin || section.title !== 'הגדרות')
                     .map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive = pathname === item.href || (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
                     const Icon = item.icon;
 
                     return (
@@ -171,7 +227,6 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
             ))}
           </nav>
 
-          {/* User section – כפתור התנתקות */}
           <div className="p-4 border-t border-border">
             <Button
               variant="ghost"
@@ -185,7 +240,6 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
         </div>
       </div>
 
-      {/* שכבת רקע למובייל */}
       {isMobileMenuOpen && (
         <div
           className="lg:hidden fixed inset-0 z-30 bg-black/50 backdrop-blur-sm"
