@@ -32,7 +32,7 @@ interface UserDetailsModalProps {
 const userSchema = z.object({
   full_name: z.string().min(1, 'שם מלא הוא שדה חובה'),
   phone: z.string().nullable(),
-  role: z.enum(['admin', 'store', 'lab']),
+  role: z.enum(['admin', 'ops', 'marketing', 'store', 'lab']),
   is_active: z.boolean(),
 });
 
@@ -144,6 +144,8 @@ export function UserDetailsModal({ userId, open, onOpenChange, onUserUpdate }: U
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="admin">מנהל</SelectItem>
+                  <SelectItem value="ops">תפעול</SelectItem>
+                  <SelectItem value="marketing">שיווק</SelectItem>
                   <SelectItem value="store">חנות</SelectItem>
                   <SelectItem value="lab">מעבדה</SelectItem>
                 </SelectContent>

@@ -18,7 +18,7 @@ const userSchema = z.object({
   password: z.string().min(6, 'סיסמה חייבת להכיל לפחות 6 תווים'),
   full_name: z.string().min(2, 'שם מלא חייב להכיל לפחות 2 תווים'),
   phone: z.string(),
-  role: z.enum(['admin', 'store', 'lab']),
+  role: z.enum(['admin', 'ops', 'marketing', 'store', 'lab']),
 });
 
 type UserFormData = z.infer<typeof userSchema>;
@@ -120,6 +120,8 @@ export default function NewUserPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="admin">מנהל</SelectItem>
+                    <SelectItem value="ops">תפעול</SelectItem>
+                    <SelectItem value="marketing">שיווק</SelectItem>
                     <SelectItem value="store">חנות</SelectItem>
                     <SelectItem value="lab">מעבדה</SelectItem>
                   </SelectContent>

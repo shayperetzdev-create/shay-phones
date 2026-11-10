@@ -84,12 +84,12 @@ export function AlertsPanel() {
 
       // Check for low warranty activation rate
       const { count: newDevices } = await supabase
-        .from('devices')
+        .from('devices_with_status')
         .select('*', { count: 'exact', head: true })
         .eq('warranty_status', 'new');
 
       const { count: totalDevices } = await supabase
-        .from('devices')
+        .from('devices_with_status')
         .select('*', { count: 'exact', head: true });
 
       if (totalDevices && newDevices && (newDevices / totalDevices) > 0.4) {

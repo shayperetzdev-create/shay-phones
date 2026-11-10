@@ -5,7 +5,7 @@ import { Json, Tables } from '@/lib/supabase/database.types';
 export type { Json };
 
 // User Types
-export type UserRole = 'admin' | 'store' | 'lab';
+export type UserRole = 'admin' | 'ops' | 'marketing' | 'store' | 'lab';
 
 // Base User type from database
 export type User = Tables<'users'>;

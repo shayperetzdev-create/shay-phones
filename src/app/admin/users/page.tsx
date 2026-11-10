@@ -50,7 +50,7 @@ const editUserSchema = z.object({
   email: z.string().email('כתובת אימייל לא תקינה'),
   full_name: z.string().min(1, 'שם מלא הוא שדה חובה'),
   phone: z.string().optional(),
-  role: z.enum(['admin', 'store', 'lab']),
+  role: z.enum(['admin', 'ops', 'marketing', 'store', 'lab']),
   is_active: z.boolean(),
 });
 
@@ -66,7 +66,7 @@ const createUserSchema = z.object({
   email: z.string().email('כתובת אימייל לא תקינה'),
   full_name: z.string().min(1, 'שם מלא הוא שדה חובה'),
   phone: z.string().optional(),
-  role: z.enum(['admin', 'store', 'lab']),
+  role: z.enum(['admin', 'ops', 'marketing', 'store', 'lab']),
   password: z.string().min(8, 'הסיסמה חייבת להכיל לפחות 8 תווים'),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -661,6 +661,8 @@ export default function UsersPage() {
               <SelectContent>
                 <SelectItem value="all">כל התפקידים</SelectItem>
                 <SelectItem value="admin">מנהלים</SelectItem>
+                <SelectItem value="ops">תפעול</SelectItem>
+                <SelectItem value="marketing">שיווק</SelectItem>
                 <SelectItem value="store">חנויות</SelectItem>
                 <SelectItem value="lab">מעבדות</SelectItem>
               </SelectContent>
@@ -902,6 +904,8 @@ export default function UsersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="admin">מנהל</SelectItem>
+                  <SelectItem value="ops">תפעול</SelectItem>
+                  <SelectItem value="marketing">שיווק</SelectItem>
                   <SelectItem value="store">חנות</SelectItem>
                   <SelectItem value="lab">מעבדה</SelectItem>
                 </SelectContent>
@@ -981,6 +985,8 @@ export default function UsersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="admin">מנהל</SelectItem>
+                  <SelectItem value="ops">תפעול</SelectItem>
+                  <SelectItem value="marketing">שיווק</SelectItem>
                   <SelectItem value="store">חנות</SelectItem>
                   <SelectItem value="lab">מעבדה</SelectItem>
                 </SelectContent>
